@@ -1,44 +1,32 @@
 name: loud_cast
 description: "A Neo-Brutalist style weather application built with Flutter."
-publish_to: 'none' # Prevents accidental publishing to pub.dev
+publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  # Using a caret (^) ensures you get the latest minor and patch updates
-  # without breaking changes, promoting stability and security.
   sdk: ^3.8.1
 
 dependencies:
   flutter:
     sdk: flutter
-
-  # --- UI & Theming ---
-  google_fonts: ^6.3.0          # For custom, downloadable fonts like 'Bangers' and 'Kalam'.
-  lottie: ^3.3.1                # For high-quality, complex animations (e.g., weather states).
-  font_awesome_flutter: ^10.9.0 # Provides a wide range of additional icons (e.g., GitHub icon).
-  cupertino_icons: ^1.0.8       # Standard package for iOS style icons.
-
-  # --- State Management ---
-  provider: ^6.1.5              # For efficient, simple, and scalable state management.
-
-  # --- Networking & Data ---
-  http: ^1.5.0                  # For making HTTP requests to the weather API.
-  connectivity_plus: ^6.1.5     # To check for internet connectivity before making API calls.
-
-  # --- Utility & Device Integration ---
-  intl: ^0.20.2                 # For internationalization and formatting, like dates.
-  url_launcher: ^6.3.2          # For opening URLs (e.g., portfolio, GitHub) in the default browser.
-  android_intent_plus: ^5.3.1   # Provides a fallback for URL launching on certain Android devices.
-  shared_preferences: ^2.5.3    # For simple key-value data persistence (e.g., saving the last searched city).
+  google_fonts: ^6.3.0
+  lottie: ^3.3.1
+  font_awesome_flutter: ^10.9.0
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.5
+  http: ^1.5.0
+  connectivity_plus: ^6.1.5
+  intl: ^0.20.2
+  url_launcher: ^6.3.2
+  android_intent_plus: ^5.3.1
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # Enforces a set of recommended linting rules to encourage good coding practices
-  # and maintain high code quality. See analysis_options.yaml to configure.
   flutter_lints: ^5.0.0
+  # flutter_launcher_icons has been removed
 
 flutter:
   uses-material-design: true
@@ -46,3 +34,6 @@ flutter:
   assets:
     # Location for Lottie animation JSON files.
     - lib/assets/animations/
+    # The assets/icon/ line has been removed
+
+# The entire flutter_launcher_icons configuration block at the end is gone.

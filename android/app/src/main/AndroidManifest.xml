@@ -23,7 +23,7 @@
         android:label="loud_cast"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"> <!-- Added for adaptive icon support -->
+    android:roundIcon="@mipmap/ic_launcher"> <!-- Added for adaptive icon support -->
 
         <activity
             android:name=".MainActivity"
