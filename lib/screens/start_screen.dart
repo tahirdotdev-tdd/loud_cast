@@ -47,7 +47,10 @@ class StartScreen extends StatelessWidget {
               onTapDown: (_) => isPressed.value = true,
               onTapUp: (_) {
                 isPressed.value = false;
-                Future.delayed(const Duration(milliseconds: 150), navigateToHome);
+                Future.delayed(
+                  const Duration(milliseconds: 150),
+                  navigateToHome,
+                );
               },
               onTapCancel: () => isPressed.value = false,
               child: ValueListenableBuilder<bool>(
@@ -69,7 +72,7 @@ class StartScreen extends StatelessWidget {
                           offset: pressed
                               ? const Offset(0, 0)
                               : const Offset(8, 8),
-                        )
+                        ),
                       ],
                     ),
                     child: child,
@@ -78,7 +81,10 @@ class StartScreen extends StatelessWidget {
                 child: Text(
                   'Start Casting',
                   style: GoogleFonts.bangers(
-                    fontSize: fontSize.clamp(25, 50), // Set min and max font size
+                    fontSize: fontSize.clamp(
+                      25,
+                      50,
+                    ), // Set min and max font size
                     fontWeight: FontWeight.w900,
                     color: Colors.black,
                     letterSpacing: 1.5,

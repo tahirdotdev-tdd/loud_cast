@@ -27,7 +27,9 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
       curve: Curves.easeInOut,
     );
 
-    _controller.repeat(reverse: true); // Creates the seamless back-and-forth animation.
+    _controller.repeat(
+      reverse: true,
+    ); // Creates the seamless back-and-forth animation.
   }
 
   @override
@@ -43,8 +45,14 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
         // --- Responsive Calculations (unchanged) ---
         final double containerWidth = constraints.maxWidth;
         final double fontSize = (containerWidth * 0.1).clamp(28.0, 36.0);
-        final double horizontalPadding = (containerWidth * 0.05).clamp(15.0, 25.0);
-        final double verticalPadding = (containerWidth * 0.025).clamp(8.0, 15.0);
+        final double horizontalPadding = (containerWidth * 0.05).clamp(
+          15.0,
+          25.0,
+        );
+        final double verticalPadding = (containerWidth * 0.025).clamp(
+          8.0,
+          15.0,
+        );
         final double borderWidth = (containerWidth * 0.01).clamp(3.0, 5.0);
         final double shadowOffset = (containerWidth * 0.02).clamp(6.0, 10.0);
 
@@ -76,7 +84,7 @@ class _LoaderState extends State<Loader> with SingleTickerProviderStateMixin {
                     color: Colors.black.withOpacity(animationValue),
                     // Animate the offset using the tween and the curved animation.
                     offset: offsetTween.evaluate(_curvedAnimation),
-                  )
+                  ),
                 ],
               ),
               child: child, // The static Text widget is passed as the child.

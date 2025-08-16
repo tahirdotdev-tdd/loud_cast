@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -40,7 +38,10 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
         // Calculate all UI dimensions proportionally based on the available width.
         // Use .clamp() to define sensible minimum and maximum sizes.
         final double margin = (containerWidth * 0.05).clamp(15.0, 30.0);
-        final double horizontalPadding = (containerWidth * 0.04).clamp(12.0, 25.0);
+        final double horizontalPadding = (containerWidth * 0.04).clamp(
+          12.0,
+          25.0,
+        );
         final double verticalPadding = (containerWidth * 0.005).clamp(1.0, 4.0);
         final double fontSize = (containerWidth * 0.04).clamp(15.0, 20.0);
         final double iconSize = (containerWidth * 0.07).clamp(26.0, 32.0);
@@ -60,7 +61,7 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
               BoxShadow(
                 color: Colors.black,
                 offset: Offset(shadowOffset, shadowOffset),
-              )
+              ),
             ],
           ),
           child: Row(
@@ -101,11 +102,7 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
                     FocusScope.of(context).unfocus();
                   }
                 },
-                child: Icon(
-                  Icons.search,
-                  color: Colors.black,
-                  size: iconSize,
-                ),
+                child: Icon(Icons.search, color: Colors.black, size: iconSize),
               ),
             ],
           ),

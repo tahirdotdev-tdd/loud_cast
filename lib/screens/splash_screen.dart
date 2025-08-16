@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loud_cast/screens/home_screen.dart';
+
 import 'package:loud_cast/screens/start_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,7 +12,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   // NEW: A CurvedAnimation to make the repeating animation feel more natural.
   late final Animation<double> _curvedAnimation;
@@ -22,7 +23,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500), // Slightly longer duration for a smoother feel
+      duration: const Duration(
+        milliseconds: 500,
+      ), // Slightly longer duration for a smoother feel
     );
 
     // Apply an easing curve to the controller's animation.
@@ -31,7 +34,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       curve: Curves.easeInOut,
     );
 
-    _controller.repeat(reverse: true); // Creates the seamless back-and-forth animation
+    _controller.repeat(
+      reverse: true,
+    ); // Creates the seamless back-and-forth animation
 
     _initializeApp();
   }
@@ -49,11 +54,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   // Pre-loads essential assets (unchanged).
   Future<void> _precacheAssets() async {
-    await Future.wait([
-      'lib/assets/animations/sunny.json',
-      'lib/assets/animations/rainy.json',
-      'lib/assets/animations/cloudy.json',
-    ].map((asset) => rootBundle.load(asset)));
+    await Future.wait(
+      [
+        'lib/assets/animations/sunny.json',
+        'lib/assets/animations/rainy.json',
+        'lib/assets/animations/cloudy.json',
+      ].map((asset) => rootBundle.load(asset)),
+    );
   }
 
   // Navigation logic (unchanged).
@@ -62,10 +69,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 900),
         pageBuilder: (_, animation, __) {
-          return FadeTransition(
-            opacity: animation,
-            child: const StartScreen(),
-          );
+          return FadeTransition(opacity: animation, child: const StartScreen());
         },
       ),
     );
@@ -126,7 +130,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         color: shadowColor.withOpacity(animationValue),
                         // Animate the offset using the tween.
                         offset: offsetTween.evaluate(_curvedAnimation),
-                      )
+                      ),
                     ],
                   ),
                   child: child,

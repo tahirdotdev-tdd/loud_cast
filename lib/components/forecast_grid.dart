@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class ForecastGrid extends StatelessWidget {
   final List forecast;
   const ForecastGrid({super.key, required this.forecast});
@@ -19,13 +18,18 @@ class ForecastGrid extends StatelessWidget {
         final double margin = (containerWidth * 0.04).clamp(12.0, 20.0);
         final double padding = (containerWidth * 0.03).clamp(8.0, 15.0);
         final double mainBorderWidth = (containerWidth * 0.01).clamp(3.0, 5.0);
-        final double mainShadowOffset = (containerWidth * 0.02).clamp(6.0, 10.0);
+        final double mainShadowOffset = (containerWidth * 0.02).clamp(
+          6.0,
+          10.0,
+        );
 
         // The container height is now proportional to its width to maintain aspect ratio.
         final double containerHeight = containerWidth * 0.55;
 
         // Calculate sizes for the inner grid boxes.
-        final double boxWidth = (containerWidth - (padding * 2)) / 3.5; // Adjust divisor for spacing
+        final double boxWidth =
+            (containerWidth - (padding * 2)) /
+            3.5; // Adjust divisor for spacing
         final double boxHeight = (containerHeight - (padding * 2)) / 2.8;
         final double boxBorderWidth = (containerWidth * 0.01).clamp(2.0, 4.0);
         final double boxShadowOffset = (containerWidth * 0.01).clamp(3.0, 5.0);
@@ -52,7 +56,9 @@ class ForecastGrid extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(3, (i) {
-                  final dayText = forecast.length > i ? "Day ${forecast[i]['day']}" : "-";
+                  final dayText = forecast.length > i
+                      ? "Day ${forecast[i]['day']}"
+                      : "-";
                   return _gridBoxContent(
                     text: dayText,
                     width: boxWidth,

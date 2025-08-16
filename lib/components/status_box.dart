@@ -25,8 +25,8 @@ class StatusBox extends StatelessWidget {
         final double shadowOffset = (screenWidth * 0.02).clamp(6.0, 10.0);
         final double borderWidth = (screenWidth * 0.01).clamp(3.0, 5.0);
 
-
         return Container(
+          alignment: Alignment.center,
           padding: EdgeInsets.symmetric(
             horizontal: horizontalPadding,
             vertical: verticalPadding,
@@ -38,12 +38,13 @@ class StatusBox extends StatelessWidget {
               BoxShadow(
                 color: Colors.black,
                 offset: Offset(shadowOffset, shadowOffset),
-              )
+              ),
             ],
           ),
           child: Text(
             status,
-            textAlign: TextAlign.center, // Center text for better look on all sizes
+            textAlign:
+                TextAlign.center, // Center text for better look on all sizes
             style: GoogleFonts.bangers(
               fontSize: fontSize,
               fontWeight: FontWeight.w900,

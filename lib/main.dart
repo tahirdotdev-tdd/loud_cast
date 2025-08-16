@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:loud_cast/screens/splash_screen.dart';
+import 'package:loud_cast/screens/home_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'LoudCast',
       debugShowCheckedModeBanner: false,
-      home: const SplashScreen(),
+      home: const HomeScreen(),
     );
   }
 }

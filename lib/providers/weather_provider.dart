@@ -18,11 +18,17 @@ class WeatherProvider with ChangeNotifier {
   String? _error;
   String? get error => _error;
 
-  // Stores the last city that was searched for, successful or not.
   String _lastSearchedCity = "Berlin";
   String get lastSearchedCity => _lastSearchedCity;
 
-  // NEW: Initializes the provider by loading the last saved city.
+  // --- Temperature unit state ---
+  bool _isFahrenheit = false;
+  bool get isFahrenheit => _isFahrenheit;
+
+  // --- NEW: Wind speed unit state ---
+  bool _isMph = false;
+  bool get isMph => _isMph;
+
   WeatherProvider() {
     _init();
   }
@@ -30,7 +36,11 @@ class WeatherProvider with ChangeNotifier {
   Future<void> _init() async {
     final prefs = await SharedPreferences.getInstance();
     final savedCity = prefs.getString('lastCity');
-    // If a city was saved, use it; otherwise, default to Berlin.
+
+    // Restore both temperature and wind speed preferences
+    _isFahrenheit = prefs.getBool('isFahrenheit') ?? false;
+    _isMph = prefs.getBool('isMph') ?? false; // NEW
+
     await fetchWeatherForCity(savedCity ?? 'Berlin');
   }
 
@@ -39,10 +49,9 @@ class WeatherProvider with ChangeNotifier {
 
     _isLoading = true;
     _error = null;
-    _lastSearchedCity = city; // Store the city being searched for.
+    _lastSearchedCity = city;
     notifyListeners();
 
-    // 1. Check for Internet Connection
     final connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
       _error = "No Internet connection. Please check your network.";
@@ -51,54 +60,76 @@ class WeatherProvider with ChangeNotifier {
       return;
     }
 
-    // 2. Proceed with API Calls
     try {
-      final geocodingUrl = Uri.parse('https://geocoding-api.open-meteo.com/v1/search?name=$city&count=1');
-      final geocodingResponse = await http.get(geocodingUrl).timeout(const Duration(seconds: 10));
+      final geocodingUrl = Uri.parse(
+        'https://geocoding-api.open-meteo.com/v1/search?name=$city&count=1',
+      );
+      final geocodingResponse = await http
+          .get(geocodingUrl)
+          .timeout(const Duration(seconds: 10));
 
       if (geocodingResponse.statusCode != 200) {
         throw Exception('Failed to get location data from the server.');
       }
 
       final geocodingData = json.decode(geocodingResponse.body);
-      if (geocodingData['results'] == null || geocodingData['results'].isEmpty) {
-        // NEW: Specific error for city not found.
+      if (geocodingData['results'] == null ||
+          geocodingData['results'].isEmpty) {
         throw Exception('City not found. Please try another city.');
       }
 
       final latitude = geocodingData['results'][0]['latitude'];
       final longitude = geocodingData['results'][0]['longitude'];
 
-      final weatherUrl = Uri.parse('https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&daily=weathercode,temperature_2m_max,windspeed_10m_max&current_weather=true&timezone=auto&forecast_days=3');
-      final weatherResponse = await http.get(weatherUrl).timeout(const Duration(seconds: 10));
+      // API URL remains the same, as we get the raw data from it
+      final weatherUrl = Uri.parse(
+        'https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&daily=weathercode,temperature_2m_max,windspeed_10m_max&current_weather=true&timezone=auto&forecast_days=3',
+      );
+      final weatherResponse = await http
+          .get(weatherUrl)
+          .timeout(const Duration(seconds: 10));
 
       if (weatherResponse.statusCode != 200) {
         throw Exception('Failed to load weather forecast.');
       }
 
-      final weatherData = json.decode(weatherResponse.body);
+      final weatherJson = json.decode(weatherResponse.body);
+      final currentWeather = weatherJson['current_weather'];
 
+      // --- MODIFIED: Parse raw wind speed for forecast ---
       final List<ForecastDay> processedForecast = [];
-      final dailyData = weatherData['daily'];
+      final dailyData = weatherJson['daily'];
       for (int i = 0; i < dailyData['time'].length; i++) {
-        processedForecast.add(ForecastDay(
-          day: i + 1,
-          temperature: '${dailyData['temperature_2m_max'][i]}°C',
-          wind: '${dailyData['windspeed_10m_max'][i]} km/h',
-        ));
+        processedForecast.add(
+          ForecastDay(
+            day: i + 1,
+            // --- MODIFIED: Parse the raw temperature value ---
+            tempCelsius: (dailyData['temperature_2m_max'][i] as num).toDouble(),
+            windKmh: (dailyData['windspeed_10m_max'][i] as num).toDouble(),
+          ),
+        );
       }
 
+      // Store raw numeric values
+      final double tempCelsius = (currentWeather['temperature'] as num)
+          .toDouble();
+      final double windKmh = (currentWeather['windspeed'] as num)
+          .toDouble(); // NEW
+
+      // --- MODIFIED: Pass the new windKmh value to the constructor ---
       _weatherData = WeatherData(
         cityName: city,
-        temperature: "${weatherData['current_weather']['temperature']}°C",
-        status: _getWeatherStatusFromCode(weatherData['current_weather']['weathercode']),
+        temperature: "$tempCelsius°C",
+        status: _getWeatherStatusFromCode(currentWeather['weathercode']),
         forecast: processedForecast,
+        isDay: currentWeather['is_day'] == 1,
+        dateTime: DateTime.parse(currentWeather['time']),
+        tempCelsius: tempCelsius,
+        windKmh: windKmh, // NEW
       );
 
-      // NEW: On success, save the city to SharedPreferences.
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('lastCity', city);
-
     } on SocketException {
       _error = "Network Error. Could not connect to the server.";
     } on TimeoutException {
@@ -116,5 +147,40 @@ class WeatherProvider with ChangeNotifier {
     if (code == 2 || code == 3) return "Cloudy";
     if (code >= 51 && code <= 67 || code >= 80 && code <= 82) return "Rainy";
     return "Cloudy";
+  }
+
+  void toggleUnits(bool value) async {
+    _isFahrenheit = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isFahrenheit', _isFahrenheit);
+    notifyListeners();
+  }
+
+  String formatTemperature(double tempCelsius) {
+    if (_isFahrenheit) {
+      final f = (tempCelsius * 9 / 5) + 32;
+      return "${f.toStringAsFixed(1)} °F";
+    } else {
+      return "${tempCelsius.toStringAsFixed(1)} °C";
+    }
+  }
+
+  // --- NEW: Method to toggle wind speed units ---
+  void toggleWindSpeed(bool value) async {
+    _isMph = value;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isMph', _isMph);
+    notifyListeners();
+  }
+
+  // --- NEW: Method to format wind speed based on user preference ---
+  String formatWindSpeed(double windKmh) {
+    if (_isMph) {
+      // Conversion factor from km/h to mph
+      final mph = windKmh * 0.621371;
+      return "${mph.toStringAsFixed(1)} mph";
+    } else {
+      return "${windKmh.toStringAsFixed(1)} km/h";
+    }
   }
 }

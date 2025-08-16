@@ -20,7 +20,10 @@ class ShadowContainer extends StatelessWidget {
         // Scale font size, padding, and other properties proportionally.
         // Use .clamp() to set sensible min and max limits.
         final double fontSize = (containerWidth * 0.05).clamp(14.0, 20.0);
-        final double horizontalPadding = (containerWidth * 0.1).clamp(20.0, 40.0);
+        final double horizontalPadding = (containerWidth * 0.1).clamp(
+          20.0,
+          40.0,
+        );
         final double verticalPadding = (containerWidth * 0.03).clamp(8.0, 15.0);
         final double borderWidth = (containerWidth * 0.01).clamp(3.0, 5.0);
         final double shadowOffset = (containerWidth * 0.02).clamp(6.0, 10.0);
@@ -37,7 +40,7 @@ class ShadowContainer extends StatelessWidget {
               BoxShadow(
                 color: Colors.black,
                 offset: Offset(shadowOffset, shadowOffset),
-              )
+              ),
             ],
           ),
           child: Text(

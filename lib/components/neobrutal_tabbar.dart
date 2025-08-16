@@ -66,12 +66,12 @@ class _NeobrutalTabbarState extends State<NeobrutalTabbar>
         border: Border.all(color: Colors.black, width: widget.borderWidth),
         boxShadow: isSelected
             ? [
-          BoxShadow(
-            color: Colors.black,
-            offset: Offset(shadowOffset, shadowOffset),
-            blurRadius: 0,
-          )
-        ]
+                BoxShadow(
+                  color: Colors.black,
+                  offset: Offset(shadowOffset, shadowOffset),
+                  blurRadius: 0,
+                ),
+              ]
             : [],
       ),
       child: Text(
@@ -109,10 +109,12 @@ class _NeobrutalTabbarState extends State<NeobrutalTabbar>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     widget.tabs.length,
-                        (index) => GestureDetector(
+                    (index) => GestureDetector(
                       onTap: () => _tabController.animateTo(index),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: horizontalPadding,
+                        ),
                         child: _neoBrutalTab(
                           text: widget.tabs[index],
                           isSelected: _tabController.index == index,
